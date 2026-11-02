@@ -52,7 +52,7 @@ curl -X DELETE http://localhost:8080/api/redis/greeting
 - Kafka (1–20): 메시지 발행, key, partition, listener, consumer group, manual ACK, retry, DLT, batch, headers, JSON, correlation ID, offset, concurrency, transaction, idempotence, callback, pause/resume, lag, schema evolution
 - Redis (21–40): string, TTL, counter, delete, existence, expiry refresh, TTL read, list, hash, set, sorted set, cache-aside, invalidation, lock, rate limit, session, idempotency, Pub/Sub, stream, Lua atomic operation
 - Integration (41–46): Kafka-to-Redis, Redis dedupe, outbox, replay, cache warming, fallback
-- API / Swagger (47–50): OpenAPI metadata, validation, standard errors, pagination/health documentation
+- API / Swagger (47–50): OpenAPI metadata, validation, standard errors, health endpoint
 
 ## 환경 변수
 - `KAFKA_BOOTSTRAP_SERVERS` (기본값 `localhost:9092`)
