@@ -57,8 +57,7 @@ public class ExampleCatalog {
             Map.of("id", 47, "category", "API / Swagger", "title", "OpenAPI metadata", "description", "Set API title, description and version."),
             Map.of("id", 48, "category", "API / Swagger", "title", "Request validation", "description", "Validate input with Jakarta Bean Validation."),
             Map.of("id", 49, "category", "API / Swagger", "title", "Standard error response", "description", "Return a consistent error body."),
-            Map.of("id", 50, "category", "API / Swagger", "title", "Pagination contract", "description", "Document page and size parameters."),
-            Map.of("id", 51, "category", "API / Swagger", "title", "Health endpoint", "description", "Expose readiness and liveness information.")
+            Map.of("id", 50, "category", "API / Swagger", "title", "Health endpoint", "description", "Expose readiness and liveness information.")
         );
     }
 }
