@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api")
 @Tag(name = "Examples", description = "Kafka, Redis and API examples")
 public class ExampleController {
+    // Controller는 HTTP 요청 검증과 응답 구성에 집중하고 실제 명령은 Service에 위임한다.
     private final ExampleCatalog catalog;
     private final KafkaDemoService kafka;
     private final RedisDemoService redis;
@@ -30,7 +31,10 @@ public class ExampleController {
 
     @GetMapping("/examples")
     @Operation(summary = "List the 50 example scenarios")
-    public Object examples() { return catalog.all(); }
+    public Object examples() {
+        // 학습 목차를 조회한다. 이 카탈로그 자체가 50개 기능의 구현 완료를 뜻하지는 않는다.
+        return catalog.all();
+    }
 
     @GetMapping("/examples/{id}")
     @Operation(summary = "Get an example scenario by number")
@@ -43,6 +47,7 @@ public class ExampleController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Operation(summary = "Publish a Kafka message to demo.events")
     public Map<String, Object> publish(@Valid @RequestBody PublishRequest request) {
+        // @Valid가 필수값/길이를 검사한 뒤 Kafka producer 서비스로 위임한다.
         kafka.publish(request.key(), request.message());
         return Map.of("status", "accepted", "topic", "demo.events", "key", request.key());
     }
@@ -50,6 +55,7 @@ public class ExampleController {
     @PutMapping("/redis/{key}")
     @Operation(summary = "Write a Redis string value; ttlSeconds=0 means no expiry")
     public Map<String, Object> set(@PathVariable @Size(max = 200) String key, @Valid @RequestBody RedisWrite request) {
+        // TTL 0은 무기한 저장, 양수는 초 단위 만료로 처리한다.
         String value = redis.set(key, request.value(), request.ttlSeconds());
         return Map.of("key", key, "value", value == null ? "" : value, "ttlSeconds", request.ttlSeconds());
     }
@@ -58,6 +64,7 @@ public class ExampleController {
     @Operation(summary = "Read a Redis string value")
     public Map<String, Object> get(@PathVariable String key) {
         String value = redis.get(key);
+        // Redis key가 없을 때는 명시적으로 HTTP 404를 반환한다.
         if (value == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Redis key not found");
         return Map.of("key", key, "value", value, "ttlSeconds", redis.ttl(key));
     }
@@ -74,6 +81,7 @@ public class ExampleController {
         return Map.of("key", key, "value", redis.increment(key));
     }
 
+    // Jakarta Validation: 빈 문자열, 과도한 길이, 음수 TTL을 요청 단계에서 거부한다.
     public record PublishRequest(@NotBlank @Size(max = 200) String key,
                                  @NotBlank @Size(max = 5000) String message) {}
     public record RedisWrite(@NotBlank @Size(max = 5000) String value,
